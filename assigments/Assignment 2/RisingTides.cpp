@@ -6,11 +6,44 @@ using namespace std;
 Grid<bool> floodedRegionsIn(const Grid<double>& terrain,
                             const Vector<GridLocation>& sources,
                             double height) {
-    /* TODO: Delete this line and the next four lines, then implement this function. */
-    (void) terrain;
-    (void) sources;
-    (void) height;
-    return {};
+    Queue<GridLocation>q;
+    Grid<bool>b(terrain.numRows(),terrain.numCols());
+    for(GridLocation g:sources){
+        q.enqueue(g);
+        b[g.row][g.col]=true;
+    }
+    while(!q.isEmpty()){
+        if(q.peek().col+1<terrain.numCols()
+            &&terrain[q.peek().row][q.peek().col+1]<=height
+            &&b[q.peek().row][q.peek().col+1]==false){
+            GridLocation temp={q.peek().row,q.peek().col+1};
+            q.enqueue(temp);
+            b[q.peek().row][q.peek().col+1]=true;
+        }
+        if(q.peek().col-1>=0
+            &&terrain[q.peek().row][q.peek().col-1]<=height
+            &&b[q.peek().row][q.peek().col-1]==false){
+            GridLocation temp={q.peek().row,q.peek().col-1};
+            q.enqueue(temp);
+            b[q.peek().row][q.peek().col-1]=true;
+        }
+        if(q.peek().row+1<terrain.numRows()
+                 &&terrain[q.peek().row+1][q.peek().col]<=height
+                 &&b[q.peek().row+1][q.peek().col]==false){
+            GridLocation temp={q.peek().row+1,q.peek().col};
+            q.enqueue(temp);
+            b[q.peek().row+1][q.peek().col]=true;
+        }
+        if(q.peek().row-1>=0
+                 &&terrain[q.peek().row-1][q.peek().col]<=height
+                 &&b[q.peek().row-1][q.peek().col]==false){
+            GridLocation temp={q.peek().row-1,q.peek().col};
+            q.enqueue(temp);
+            b[q.peek().row-1][q.peek().col]=true;
+        }
+        q.dequeue();
+    }
+    return b;
 }
 
 
